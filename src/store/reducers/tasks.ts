@@ -17,7 +17,7 @@ const initialState: TasksState = {
     },
     {
       id: 2,
-      title: 'Estudar typescripot',
+      title: 'Estudar typescript',
       description: 'Rever a aula 2 do módulo',
       priority: enums.Priority.URGENTE,
       status: enums.Status.CONCLUIDA
@@ -37,10 +37,19 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     remove: (state, action: PayloadAction<number>) => {
-      state.itens = state.itens.filter((task) => task.id !== action.payload)
+      state.itens = [
+        ...state.itens.filter((task) => task.id !== action.payload)
+      ]
+    },
+    edit: (state, action: PayloadAction<Task>) => {
+      const taskIndex = state.itens.findIndex((i) => i.id === action.payload.id)
+
+      if (taskIndex >= 0) {
+        state.itens[taskIndex] = action.payload
+      }
     }
   }
 })
 
-export const { remove } = taskSlice.actions
+export const { remove, edit } = taskSlice.actions
 export default taskSlice.reducer

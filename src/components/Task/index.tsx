@@ -1,15 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import * as S from './styles'
-import { remove } from '../../store/reducers/tasks'
+import { remove, edit } from '../../store/reducers/tasks'
 import TaskClass from '../../models/Task'
 
 type Props = TaskClass
 
-const Task = ({ description, title, priority, status, id }: Props) => {
+const Task = ({
+  description: originalDescription,
+  title,
+  priority,
+  status,
+  id
+}: Props) => {
   const dispatch = useDispatch()
   const [isEditing, setIsEditing] = useState(false)
+  const [description, setDescription] = useState('')
+
+  useEffect(() => {
+    if (originalDescription.length > 0) {
+      setDescription(originalDescription)
+    }
+  }, [originalDescription])
+
+  function cancelEdit() {
+    setIsEditing(false)
+    setDescription(originalDescription)
+  }
 
   return (
     <S.TaskCard>
@@ -20,13 +38,32 @@ const Task = ({ description, title, priority, status, id }: Props) => {
       <S.Tag param="status" status={status}>
         {status}
       </S.Tag>
-      <S.Description value={description} />
+      <S.Description
+        disabled={!isEditing}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
 
       <S.ActionBar>
         {isEditing ? (
           <>
-            <S.ButtonSalvar>Salvar</S.ButtonSalvar>
-            <S.ButtonCancelarRemover onClick={() => setIsEditing(false)}>
+            <S.ButtonSalvar
+              onClick={() => {
+                dispatch(
+                  edit({
+                    description,
+                    id,
+                    title,
+                    priority,
+                    status
+                  })
+                )
+                setIsEditing(false)
+              }}
+            >
+              Salvar
+            </S.ButtonSalvar>
+            <S.ButtonCancelarRemover onClick={() => cancelEdit()}>
               Cancelar
             </S.ButtonCancelarRemover>
           </>
