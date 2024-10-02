@@ -14,14 +14,3 @@ export const Filters = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 `
-
-// estilo do input
-export const Input = styled.input`
-  border-radius: 8px;
-  padding: 8px;
-  color: #666;
-  border-color: #666;
-  background-color: #fff;
-  font-weight: bold;
-  width: 100%;
-`

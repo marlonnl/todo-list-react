@@ -5,6 +5,7 @@ import { alteraTermo } from '../../store/reducers/filter'
 
 import * as S from './styles'
 import * as enums from '../../utils/enums/Task'
+import { Campo } from '../../styles'
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -13,7 +14,7 @@ const Sidebar = () => {
   return (
     <S.Aside>
       <div>
-        <S.Input
+        <Campo
           type="text"
           placeholder="Buscar"
           value={termo}
