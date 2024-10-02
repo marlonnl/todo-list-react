@@ -28,3 +28,7 @@ export const Opcoes = styled.div`
     margin-right: 2px;
   }
 `
+
+export const Opcao = styled.div`
+  display: inline;
+`

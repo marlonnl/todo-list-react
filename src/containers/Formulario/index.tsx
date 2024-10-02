@@ -1,30 +1,78 @@
+import { FormEvent, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import { cadastrar } from '../../store/reducers/tasks'
+
 import { ButtonSalvar, MainContainer, Titulo } from '../../styles'
 import { Campo } from '../../styles'
-import { Form, Opcoes } from './styles'
+import { Form, Opcao, Opcoes } from './styles'
 
-const Formulario = () => (
-  <MainContainer>
-    <Titulo>Nova tarefa</Titulo>
-    <Form>
-      <Campo type="text" placeholder="nome/título" />
-      <Campo as="textarea" placeholder="descrição" />
+import * as enums from '../../utils/enums/Task'
+import Task from '../../models/Task'
 
-      <Opcoes>
-        <p>Prioridade</p>
+const Formulario = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-        <input name="priority" type="radio" id="normal" />
-        <label htmlFor="normal">normal</label>
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [priority, setPriority] = useState(enums.Priority.NORMAL)
 
-        <input name="priority" type="radio" id="importante" />
-        <label htmlFor="importante">importante</label>
+  const addTask = (e: FormEvent) => {
+    e.preventDefault()
+    const newTask = new Task(
+      9,
+      title,
+      description,
+      priority,
+      enums.Status.PENDENTE
+    )
 
-        <input name="priority" type="radio" id="urgente" />
-        <label htmlFor="urgente">urgente</label>
-      </Opcoes>
+    dispatch(cadastrar(newTask))
+    // volta para a pagina inicial
+    navigate('/')
+  }
 
-      <ButtonSalvar type="submit">Adicionar</ButtonSalvar>
-    </Form>
-  </MainContainer>
-)
+  return (
+    <MainContainer>
+      <Titulo>Nova tarefa</Titulo>
+      <Form onSubmit={addTask}>
+        <Campo
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          type="text"
+          placeholder="nome/título"
+        />
+        <Campo
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          as="textarea"
+          placeholder="descrição"
+        />
+
+        <Opcoes>
+          <p>Prioridade</p>
+
+          {Object.values(enums.Priority).map((priority) => (
+            <Opcao key={priority}>
+              <input
+                value={priority}
+                name="priority"
+                type="radio"
+                id={priority}
+                defaultChecked={priority === enums.Priority.NORMAL}
+                onChange={(e) => setPriority(e.target.value as enums.Priority)}
+              />
+              <label htmlFor={priority}>{priority}</label>
+            </Opcao>
+          ))}
+        </Opcoes>
+
+        <ButtonSalvar type="submit">Adicionar</ButtonSalvar>
+      </Form>
+    </MainContainer>
+  )
+}
 
 export default Formulario
