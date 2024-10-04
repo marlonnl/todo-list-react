@@ -9,7 +9,6 @@ import { Campo } from '../../styles'
 import { Form, Opcao, Opcoes } from './styles'
 
 import * as enums from '../../utils/enums/Task'
-import Task from '../../models/Task'
 
 const Formulario = () => {
   const dispatch = useDispatch()
@@ -21,15 +20,15 @@ const Formulario = () => {
 
   const addTask = (e: FormEvent) => {
     e.preventDefault()
-    const newTask = new Task(
-      9,
-      title,
-      description,
-      priority,
-      enums.Status.PENDENTE
-    )
 
-    dispatch(cadastrar(newTask))
+    dispatch(
+      cadastrar({
+        title,
+        priority,
+        status: enums.Status.PENDENTE,
+        description
+      })
+    )
     // volta para a pagina inicial
     navigate('/')
   }
